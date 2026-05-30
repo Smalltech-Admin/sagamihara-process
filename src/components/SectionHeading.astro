@@ -1,0 +1,33 @@
+---
+interface Props {
+  eyebrow?: string;
+  align?: 'left' | 'center';
+  light?: boolean; // ライト背景セクション用に文字色反転
+  size?: string; // h2のフォントサイズクラス（既定より小さくしたい時に上書き）
+}
+const {
+  eyebrow,
+  align = 'left',
+  light = false,
+  size = 'text-[2.4rem] sm:text-5xl md:text-6xl',
+} = Astro.props;
+const alignCls = align === 'center' ? 'items-center text-center' : 'items-start text-left';
+const eyebrowColor = 'text-green';
+const titleColor = light ? 'text-ink' : 'text-bone';
+const lead = align === 'center' ? 'justify-center' : '';
+---
+
+<div class={`flex flex-col ${alignCls} reveal`}>
+  {
+    eyebrow && (
+      <p class={`eyebrow ${eyebrowColor} flex items-center gap-2 mb-4 ${lead}`}>
+        <span class="inline-block w-6 h-px bg-green" />
+        {eyebrow}
+      </p>
+    )
+  }
+  <h2 class={`font-display ${size} leading-[0.95] ${titleColor}`}>
+    <slot />
+  </h2>
+  <slot name="lead" />
+</div>

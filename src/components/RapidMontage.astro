@@ -1,0 +1,156 @@
+---
+// ヒーロー・イントロ：
+//  1) 先頭画像（ロゴ）をゆっくりフェードイン＆約1秒表示
+//  2) ロゴが「パチパチ」点滅して写真の連写へ移行
+//  3) 写真を高速ハードカット（既定0.2秒）で切替 → 最後の1枚で停止
+//  4) <html>から montage-running を外し前面テキストをゆっくり表示
+// prefers-reduced-motion 時は即・最後の写真で停止。
+interface Props {
+  images: string[];
+  interval?: number; // ms（写真1枚あたり）
+  firstHold?: number; // 先頭ロゴの表示時間 ms
+  class?: string;
+}
+const { images, interval = 200, firstHold = 1000, class: className = '' } = Astro.props;
+---
+
+<div
+  class={`montage absolute inset-0 overflow-hidden ${className}`}
+  data-montage
+  data-interval={interval}
+  data-firsthold={firstHold}
+>
+  {
+    images.map((src, i) => (
+      <div class={`m-frame absolute inset-0${i === 0 ? ' m-first' : ''}`} data-active={i === 0 ? 'true' : 'false'}>
+        <img src={src} alt="" class="w-full h-full object-cover" loading="eager" decoding="async" />
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .m-frame {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .m-frame[data-active='true'] {
+    opacity: 1;
+    visibility: visible;
+    z-index: 1;
+  }
+  /* 先頭（ロゴ）はゆっくりフェードイン */
+  .m-frame.m-first[data-active='true'] {
+    animation: m-fadein 1s ease both;
+  }
+  @keyframes m-fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  /* ロゴ→写真への移行：パチパチ点滅 */
+  .m-frame.m-flickering[data-active='true'] {
+    animation: m-flicker 0.5s linear both;
+  }
+  @keyframes m-flicker {
+    0% {
+      opacity: 1;
+    }
+    14% {
+      opacity: 0.12;
+    }
+    22% {
+      opacity: 1;
+    }
+    36% {
+      opacity: 0.08;
+    }
+    46% {
+      opacity: 1;
+    }
+    60% {
+      opacity: 0.2;
+    }
+    68% {
+      opacity: 1;
+    }
+    84% {
+      opacity: 0.04;
+    }
+    92% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.4;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .m-frame.m-first[data-active='true'],
+    .m-frame.m-flickering[data-active='true'] {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll('[data-montage]').forEach((root) => {
+    const frames = Array.from(root.querySelectorAll<HTMLElement>('.m-frame'));
+    if (!frames.length) return;
+    const base = Number(root.getAttribute('data-interval') ?? 200);
+    const firstHold = Number(root.getAttribute('data-firsthold') ?? 1000);
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const last = frames.length - 1;
+    const FLICKER = 500; // パチパチ点滅の長さ ms
+
+    const settle = (idx: number) => {
+      frames.forEach((f, i) => f.setAttribute('data-active', i === idx ? 'true' : 'false'));
+      document.documentElement.classList.remove('montage-running');
+    };
+
+    if (reduce || frames.length < 2) {
+      settle(last);
+      return;
+    }
+
+    const startCuts = () => {
+      let cur = 0; // 先頭=ロゴ。最初のtickでロゴを外して写真へ。
+      const timer = window.setInterval(() => {
+        if (cur >= last) {
+          window.clearInterval(timer);
+          document.documentElement.classList.remove('montage-running'); // 文字を出す
+          return;
+        }
+        frames[cur].setAttribute('data-active', 'false');
+        cur++;
+        frames[cur].setAttribute('data-active', 'true');
+      }, base);
+      window.setTimeout(() => {
+        window.clearInterval(timer);
+        settle(last);
+      }, base * frames.length + 2500);
+    };
+
+    // 画像プリロード（最大1.2秒で打ち切り）＋ロゴ表示時間 を満たす
+    const imgs = frames.map((f) => f.querySelector('img')!).filter(Boolean);
+    const ready = Promise.all(
+      imgs.map((im) =>
+        im.complete && im.naturalWidth
+          ? Promise.resolve()
+          : new Promise<void>((res) => {
+              im.addEventListener('load', () => res(), { once: true });
+              im.addEventListener('error', () => res(), { once: true });
+            })
+      )
+    );
+    const preload = Promise.race([ready, new Promise<void>((r) => window.setTimeout(r, 1200))]);
+    const hold = new Promise<void>((r) => window.setTimeout(r, firstHold));
+    Promise.all([preload, hold]).then(() => {
+      // ロゴをパチパチ点滅させてから写真の連写へ
+      frames[0].classList.add('m-flickering');
+      window.setTimeout(startCuts, FLICKER);
+    });
+  });
+</script>

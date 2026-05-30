@@ -1,0 +1,163 @@
+---
+import Logo from './Logo.astro';
+import SocialIcon from './SocialIcon.astro';
+import { NAV, SOCIALS } from '../data/site';
+
+const pathname = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? pathname === '/' : pathname.startsWith(href);
+---
+
+<header
+  id="site-header"
+  class="fixed top-0 inset-x-0 z-50 transition-all duration-500"
+  data-header
+>
+  <div class="container-x">
+    <div
+      class="flex items-center justify-between h-[72px] md:h-[84px]"
+    >
+      <Logo />
+
+      <!-- Desktop nav -->
+      <nav class="hidden lg:flex items-center gap-9" aria-label="メインナビゲーション">
+        {
+          NAV.map((item) => (
+            <a
+              href={item.href}
+              class={`link-underline font-sans text-[0.82rem] font-bold tracking-[0.12em] transition-colors ${
+                isActive(item.href) ? 'text-green' : 'text-bone hover:text-green'
+              }`}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="hidden lg:flex items-center gap-4">
+        <div class="flex items-center gap-3">
+          {
+            SOCIALS.map((s) => (
+              <a
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={s.label}
+                class="text-bone/70 hover:text-green transition-colors"
+              >
+                <SocialIcon name={s.key as any} class="w-[1.05rem] h-[1.05rem]" />
+              </a>
+            ))
+          }
+        </div>
+        <a href="/contact/" class="btn btn-primary !py-2.5 !px-5 text-sm">
+          お問い合わせ
+        </a>
+      </div>
+
+      <!-- Mobile toggle -->
+      <button
+        type="button"
+        class="lg:hidden relative z-50 w-11 h-11 flex flex-col items-center justify-center gap-[5px]"
+        aria-label="メニューを開く"
+        aria-expanded="false"
+        data-menu-toggle
+      >
+        <span class="block w-6 h-[2px] bg-bone transition-all duration-300 origin-center" data-bar="1"></span>
+        <span class="block w-6 h-[2px] bg-bone transition-all duration-300" data-bar="2"></span>
+        <span class="block w-6 h-[2px] bg-bone transition-all duration-300 origin-center" data-bar="3"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile fullscreen menu -->
+  <div
+    class="lg:hidden fixed inset-0 z-40 bg-ink/98 backdrop-blur-md flex-col justify-center px-8 hidden grain"
+    data-menu-panel
+  >
+    <nav class="relative z-10 flex flex-col gap-1" aria-label="モバイルナビゲーション">
+      {
+        NAV.map((item, i) => (
+          <a
+            href={item.href}
+            class={`group flex items-baseline gap-4 py-3 border-b border-line ${
+              isActive(item.href) ? 'text-green' : 'text-bone'
+            }`}
+          >
+            <span class="font-sans text-xs text-green/60 w-8">0{i + 1}</span>
+            <span class="font-display text-4xl tracking-wide group-hover:text-green transition-colors">
+              {item.label}
+            </span>
+            <span class="font-jp text-sm text-muted ml-auto self-center">{item.labelJp}</span>
+          </a>
+        ))
+      }
+    </nav>
+    <div class="relative z-10 mt-10 flex items-center gap-5">
+      {
+        SOCIALS.map((s) => (
+          <a
+            href={s.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={s.label}
+            class="text-bone hover:text-green transition-colors"
+          >
+            <SocialIcon name={s.key as any} class="w-6 h-6" />
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</header>
+
+<script>
+  // ヘッダーのスクロール状態（ヒーロー上は透明 → スクロールで背景表示）
+  const header = document.querySelector('[data-header]');
+  const onScroll = () => {
+    if (window.scrollY > 24) {
+      header?.classList.add('is-scrolled');
+    } else {
+      header?.classList.remove('is-scrolled');
+    }
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // モバイルメニュー開閉
+  const toggle = document.querySelector('[data-menu-toggle]');
+  const panel = document.querySelector('[data-menu-panel]');
+  const bars = document.querySelectorAll('[data-bar]');
+  let open = false;
+
+  const setMenu = (next: boolean) => {
+    open = next;
+    toggle?.setAttribute('aria-expanded', String(open));
+    if (open) {
+      panel?.classList.remove('hidden');
+      panel?.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      bars[0]?.classList.add('translate-y-[7px]', 'rotate-45');
+      bars[1]?.classList.add('opacity-0');
+      bars[2]?.classList.add('-translate-y-[7px]', '-rotate-45');
+    } else {
+      panel?.classList.add('hidden');
+      panel?.classList.remove('flex');
+      document.body.style.overflow = '';
+      bars[0]?.classList.remove('translate-y-[7px]', 'rotate-45');
+      bars[1]?.classList.remove('opacity-0');
+      bars[2]?.classList.remove('-translate-y-[7px]', '-rotate-45');
+    }
+  };
+  toggle?.addEventListener('click', () => setMenu(!open));
+  panel?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setMenu(false)));
+</script>
+
+<style>
+  [data-header].is-scrolled {
+    background: color-mix(in srgb, var(--color-ink) 82%, transparent);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--color-line);
+  }
+</style>

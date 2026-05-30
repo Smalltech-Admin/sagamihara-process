@@ -1,0 +1,165 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Marquee from '../components/Marquee.astro';
+import { SITE } from '../data/site';
+
+const reasons = [
+  {
+    no: '01',
+    t: '地域とともに育つブランド',
+    d: '「相模原をバスケットの聖地へ」。地域に根ざしたクラブとの協働で、御社の地域貢献・認知をともに高めます。',
+  },
+  {
+    no: '02',
+    t: '世界へ広がる露出',
+    d: '国内外の大会に挑戦する3x3チーム。SNS・試合会場・メディアを通じて、ロゴとブランドを広く届けます。',
+  },
+  {
+    no: '03',
+    t: '次世代育成への投資',
+    d: 'アカデミー（SAGAMIHARA BASKETBALL LAB）を通じ、子どもたちの未来づくりに貢献。CSR文脈での発信が可能です。',
+  },
+];
+
+const plans = [
+  {
+    name: 'PARTNER',
+    tier: 'パートナー',
+    price: 'お問い合わせ',
+    feats: ['Webサイトへのロゴ掲載', 'SNSでの紹介', '感謝状の贈呈'],
+    accent: false,
+  },
+  {
+    name: 'OFFICIAL',
+    tier: 'オフィシャル',
+    price: 'お問い合わせ',
+    feats: ['ユニフォームへのロゴ掲出', '試合会場での掲示', 'Web・SNSでの優先掲載', 'イベント招待'],
+    accent: true,
+  },
+  {
+    name: 'TOP',
+    tier: 'トップ',
+    price: 'お問い合わせ',
+    feats: ['冠スポンサー権', '専用コンテンツ制作', '選手起用・コラボ企画', '全媒体での最優先掲出'],
+    accent: false,
+  },
+];
+
+// 既存サイト（/partner）の掲載順に合わせたパートナー企業・個人ロゴ（全20件）
+const sponsors = [
+  { src: '/images/sponsors/img3280.png', name: '縁達磨' },
+  { src: '/images/sponsors/img6479.jpg', name: 'ROVER.inc' },
+  { src: '/images/sponsors/img6477.jpg', name: 'RE コンサルティング' },
+  { src: '/images/sponsors/img4978.jpg', name: 'Rencontre' },
+  { src: '/images/sponsors/p_21c7.jpg', name: '金子 怜史' },
+  { src: '/images/sponsors/img6483.jpg', name: 'Knomak Ltd.' },
+  { src: '/images/sponsors/p_b239.jpg', name: '清水 翠春' },
+  { src: '/images/sponsors/img6482.jpg', name: 'Produce' },
+  { src: '/images/sponsors/src.jpeg', name: 'SRC Basketball Team' },
+  { src: '/images/sponsors/img4351.jpg', name: 'up stretch' },
+  { src: '/images/sponsors/company_lgo.jpg', name: 'LightHouse' },
+  { src: '/images/sponsors/company_sheep.jpg', name: 'CHOFU SHEEP' },
+  { src: '/images/sponsors/img2087.png', name: 'まなぶ鍼灸整骨院' },
+  { src: '/images/sponsors/company_toshin.jpg', name: 'トーシンリフォーム' },
+  { src: '/images/sponsors/img6470.jpg', name: 'FOURTEEN' },
+  { src: '/images/sponsors/onestep.jpeg', name: 'ONE STEP' },
+  { src: '/images/sponsors/company_endeavor.jpg', name: '株式会社エンデバー' },
+  { src: '/images/sponsors/company_pleady.jpg', name: 'PLEADY' },
+  { src: '/images/sponsors/company_megalos.jpg', name: 'MEGALOS' },
+  { src: '/images/sponsors/company_vayore.jpg', name: 'VAYoreLA' },
+];
+---
+
+<Layout
+  title="スポンサー募集"
+  description="相模原プロセスは、ともに挑戦するスポンサー・パートナー企業を募集しています。"
+>
+  <PageHero
+    eyebrow="スポンサー募集"
+    titleEn="SPONSOR"
+    image="/images/hero/banner-sponsor.jpg"
+    imageOpacity="opacity-60"
+    lead="相模原から世界へ挑むクラブを、共に。御社のブランドとともに、新しい挑戦の物語をつくります。"
+  />
+
+  <div class="theme-light">
+  <!-- 価値訴求 -->
+  <section class="pt-16 md:pt-24 pb-12 md:pb-20">
+    <div class="container-x">
+      <SectionHeading eyebrow="WHY SPONSOR" size="text-3xl sm:text-4xl md:text-5xl">
+        共に挑む、3つの価値。
+      </SectionHeading>
+      <div class="grid md:grid-cols-3 gap-6 mt-12">
+        {
+          reasons.map((r, i) => (
+            <div class={`reveal reveal-delay-${i + 1} rounded-2xl border border-line bg-surface/40 p-8 hover:border-green/50 transition-colors`}>
+              <p class="font-display text-5xl text-green/30">{r.no}</p>
+              <h3 class="font-jp text-xl font-bold mt-4">{r.t}</h3>
+              <p class="font-jp text-sm text-muted leading-relaxed mt-3">{r.d}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* リーチ指標セクション（世界/3/2020/∞）は削除 */}
+
+  {/* スポンサープランセクションは一旦コメントアウト
+  <section class="py-20 md:py-28">
+    <div class="container-x">
+      <SectionHeading eyebrow="PLANS" align="center">スポンサープラン</SectionHeading>
+      ...（プラン3種のカード）...
+    </div>
+  </section>
+  */}
+
+  <!-- 現在のパートナー -->
+  <section class="pb-24 md:pb-32">
+    <div class="container-x">
+      <SectionHeading eyebrow="OUR PARTNERS" align="center">
+        PARTNERS
+      </SectionHeading>
+      <div class="grid grid-cols-2 gap-4 md:gap-6 mt-12">
+        {
+          sponsors.map((s, i) => (
+            <div class={`reveal reveal-delay-${(i % 2) + 1} flex items-center justify-center rounded-2xl bg-white border border-black/5 p-3 md:p-5 aspect-[2/1] hover-rise`}>
+              <img src={s.src} alt={s.name} class="w-full h-full object-contain" loading="lazy" />
+            </div>
+          ))
+        }
+      </div>
+      <p class="font-jp text-xs text-muted text-center mt-6 reveal">
+        ※ 既存サイトのパートナー企業様ロゴを掲載しています。
+      </p>
+    </div>
+  </section>
+  </div>
+
+  <!-- CTA -->
+  <section class="pb-28">
+    <div class="container-x">
+      <div class="relative overflow-hidden rounded-3xl bg-surface/60 border border-line p-10 md:p-16 text-center grain">
+        <img src="/images/hero/banner-sponsor.jpg" alt="" class="absolute inset-0 w-full h-full object-cover opacity-40" loading="lazy" />
+        <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/80 to-ink/50"></div>
+        <div class="absolute -left-20 -top-20 w-80 h-80 rounded-full bg-green/15 blur-3xl"></div>
+        <div class="relative z-10">
+          <h2 class="font-display text-4xl md:text-6xl reveal">JOIN THE PROCESS.</h2>
+          <p class="font-jp text-muted mt-5 reveal reveal-delay-1">
+            ご興味をお持ちいただけましたら、まずはお気軽にお問い合わせください。<br class="hidden md:block" />
+            資料送付・ご訪問でのご説明も承ります。
+          </p>
+          <div class="flex flex-wrap justify-center gap-3 mt-8 reveal reveal-delay-2">
+            <a href="/contact/" class="btn btn-primary">お問い合わせ <span aria-hidden="true">→</span></a>
+            <a href={`mailto:${SITE.email}`} class="btn btn-ghost">{SITE.email}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ページ下部のマーキー（流れる帯）は一旦非表示 */}
+  {/* <Marquee light /> */}
+</Layout>

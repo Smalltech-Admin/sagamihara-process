@@ -1,0 +1,28 @@
+---
+// 流れるテキスト帯。items を2回繰り返して途切れなくループ。
+interface Props {
+  items?: string[];
+  reverse?: boolean;
+  light?: boolean;
+}
+const {
+  items = ['TRUST THE PROCESS', '相模原をバスケットの聖地へ', 'SAGAMIHARA PROCESS', '3x3 PRO BASKETBALL'],
+  reverse = false,
+  light = false,
+} = Astro.props;
+const loop = [...items, ...items];
+const color = light ? 'text-ink' : 'text-bone';
+---
+
+<div class={`relative overflow-hidden py-5 select-none ${light ? 'bg-green' : 'border-y border-line'}`}>
+  <div class={`marquee ${reverse ? 'marquee--reverse' : ''}`}>
+    {
+      loop.map((t) => (
+        <span class={`font-display text-3xl md:text-5xl tracking-wide whitespace-nowrap flex items-center ${color}`}>
+          <span class="px-6">{t}</span>
+          <span class={`text-2xl ${light ? 'text-ink' : 'text-green'}`}>●</span>
+        </span>
+      ))
+    }
+  </div>
+</div>

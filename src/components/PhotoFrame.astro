@@ -1,0 +1,65 @@
+---
+// 写真プレースホルダー（デモ用）。
+// 実写真（Instagram/Facebook等）が用意でき次第、src を渡せば差し替え可能。
+// src 未指定時は緑デュオトーン調のプレースホルダーを表示する。
+interface Props {
+  src?: string;
+  alt?: string;
+  label?: string; // プレースホルダー時に表示するキャプション
+  tag?: string; // 中央に出すイニシャル等
+  ratio?: string; // 例: 'aspect-[4/5]'
+  class?: string;
+}
+const {
+  src,
+  alt = '',
+  label = 'PHOTO',
+  tag,
+  ratio = 'aspect-[4/5]',
+  class: className = '',
+} = Astro.props;
+---
+
+<div class={`relative overflow-hidden rounded-2xl ${ratio} ${className}`}>
+  {
+    src ? (
+      <img src={src} alt={alt} class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+    ) : (
+      <div class="absolute inset-0">
+        <!-- デュオトーン下地 -->
+        <div
+          class="absolute inset-0"
+          style="background:radial-gradient(120% 80% at 30% 10%, #1d2a23 0%, #0d1310 60%, #090d0b 100%);"
+        >
+        </div>
+        <!-- ストライプ質感 -->
+        <div
+          class="absolute inset-0 opacity-[0.07]"
+          style="background-image:repeating-linear-gradient(135deg,#19e37d 0 2px,transparent 2px 14px);"
+        >
+        </div>
+        <!-- バスケのライン -->
+        <svg
+          class="absolute -bottom-8 -right-8 w-44 h-44 text-green/15"
+          viewBox="0 0 100 100"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle cx="50" cy="50" r="46" stroke="currentColor" stroke-width="2" />
+          <path d="M4 50h92M50 4v92M16 16c20 16 48 16 68 0M16 84c20-16 48-16 68 0" stroke="currentColor" stroke-width="2" />
+        </svg>
+        {
+          tag && (
+            <span class="absolute inset-0 grid place-items-center font-display text-6xl text-bone/10">
+              {tag}
+            </span>
+          )
+        }
+        <span class="absolute left-4 bottom-4 eyebrow text-green/70 flex items-center gap-2">
+          <span class="inline-block w-4 h-px bg-green/60" />
+          {label}
+        </span>
+      </div>
+    )
+  }
+</div>

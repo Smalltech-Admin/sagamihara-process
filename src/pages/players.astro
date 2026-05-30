@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import PlayerCard from '../components/PlayerCard.astro';
+import Marquee from '../components/Marquee.astro';
+import { PLAYERS } from '../data/players';
+---
+
+<Layout title="選手紹介" description="相模原プロセスに所属するトップチームの選手をご紹介します。">
+  <PageHero
+    eyebrow="選手紹介"
+    titleEn="PLAYERS"
+    image="/images/hero/hero3.jpg"
+    lead="相模原プロセスのコートを彩るメンバーたちを紹介します。"
+  />
+
+  <div class="theme-light">
+  <section class="pb-24 md:pb-32 pt-20 md:pt-28">
+    <div class="container-x">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        {PLAYERS.map((p, i) => <PlayerCard player={p} class={`reveal reveal-delay-${(i % 3) + 1}`} />)}
+      </div>
+
+      <p class="font-jp text-xs text-muted mt-12 reveal">
+        ※ 選手名・背番号・写真は公式Instagram（@sagamihara3x3）の加入告知より。日本語表記の一部は確認のうえ確定します。
+      </p>
+    </div>
+  </section>
+  </div>
+
+  {/* ページ下部のマーキー（流れる帯）は一旦非表示 */}
+  {/* <Marquee light /> */}
+</Layout>

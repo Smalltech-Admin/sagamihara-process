@@ -1,0 +1,85 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import SocialIcon from '../components/SocialIcon.astro';
+import { SITE, SOCIALS } from '../data/site';
+
+const ig = SOCIALS.find((s) => s.primary)!;
+---
+
+<Layout
+  title="お問い合わせ"
+  description="相模原プロセスへのお問い合わせ。スポンサー・アカデミー・取材などお気軽にご連絡ください。"
+>
+  <PageHero
+    eyebrow="お問い合わせ"
+    titleEn="CONTACT"
+    image="/images/gallery/about.jpg"
+    lead="スポンサー・アカデミー・取材・コラボレーションなど、お気軽にご連絡ください。"
+  />
+
+  <div class="theme-light">
+  <section class="pt-16 md:pt-24 pb-24 md:pb-32">
+    <div class="container-x grid lg:grid-cols-[1.4fr_1fr] gap-6 lg:gap-8 items-stretch">
+      <!-- メール（メインの問い合わせ手段） -->
+      <a
+        href={`mailto:${SITE.email}`}
+        class="reveal group relative overflow-hidden rounded-3xl border border-line bg-surface/40 p-9 md:p-14 flex flex-col justify-between hover:border-green/60 transition-colors grain"
+      >
+        <div class="absolute -right-16 -top-16 w-72 h-72 rounded-full bg-green/15 blur-3xl group-hover:bg-green/25 transition-colors"></div>
+        <div class="relative z-10">
+          <p class="eyebrow text-green flex items-center gap-2">
+            <span class="inline-block w-6 h-px bg-green"></span>EMAIL
+          </p>
+          <p class="font-jp text-bone/80 mt-6">お問い合わせは、こちらのメールアドレスまで。</p>
+          <p class="font-display text-lg sm:text-2xl md:text-4xl mt-3 tracking-wide group-hover:text-green transition-colors">
+            {SITE.email}
+          </p>
+        </div>
+        <span class="relative z-10 inline-flex items-center gap-2 mt-10 font-sans text-sm font-bold text-green">
+          メールを送る
+          <span class="group-hover:translate-x-1 transition-transform" aria-hidden="true">→</span>
+        </span>
+      </a>
+
+      <!-- SNS -->
+      <div class="flex flex-col gap-6">
+        <a
+          href={ig.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="reveal reveal-delay-1 group flex-1 rounded-3xl border border-line bg-surface/40 p-8 hover:border-green/60 transition-colors flex flex-col justify-center"
+        >
+          <p class="eyebrow text-green flex items-center gap-2">
+            <SocialIcon name="instagram" class="w-4 h-4" />INSTAGRAM DM
+          </p>
+          <p class="font-sans text-xl mt-3 group-hover:text-green transition-colors">{ig.handle}</p>
+          <p class="font-jp text-sm text-muted mt-1">日々の情報更新中！DMもお気軽に。</p>
+        </a>
+
+        <div class="reveal reveal-delay-2 rounded-3xl border border-line bg-surface/40 p-8">
+          <p class="eyebrow text-green">FOLLOW US</p>
+          <div class="flex items-center gap-4 mt-4">
+            {
+              SOCIALS.map((s) => (
+                <a
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.label}
+                  class="grid place-items-center w-12 h-12 rounded-xl bg-ink text-bone hover:text-green transition-colors"
+                >
+                  <SocialIcon name={s.key as any} class="w-5 h-5" />
+                </a>
+              ))
+            }
+          </div>
+          <p class="font-jp text-sm text-muted mt-5 leading-relaxed">
+            {SITE.league}<br />{SITE.hometown}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div>
+</Layout>

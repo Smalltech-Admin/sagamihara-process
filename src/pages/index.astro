@@ -1,0 +1,203 @@
+---
+import Layout from '../layouts/Layout.astro';
+import RapidMontage from '../components/RapidMontage.astro';
+import Marquee from '../components/Marquee.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import PlayerCard from '../components/PlayerCard.astro';
+import SocialIcon from '../components/SocialIcon.astro';
+import { PLAYERS } from '../data/players';
+import { SITE, SOCIALS } from '../data/site';
+
+const previewPlayers = PLAYERS.slice(0, 4);
+const ig = SOCIALS.find((s) => s.primary)!;
+
+// 連写モンタージュ用（ロゴ→IG9枚→元画像3枚 hero4/5/3、最後の hero3 で停止）
+const montageImgs = Array.from({ length: 13 }, (_, i) => `/images/montage/m${String(i + 1).padStart(2, '0')}.jpg`);
+
+// Instagram(@sagamihara3x3)の実投稿（収集したもの）
+const feedImgs = [
+  '/images/insta/ig18.jpg',
+  '/images/insta/ig22.jpg',
+  '/images/insta/ig27.jpg',
+  '/images/insta/ig13.jpg',
+  '/images/insta/ig03.jpg',
+  '/images/insta/ig10.jpg',
+  '/images/insta/ig01.jpg',
+  '/images/insta/ig06.jpg',
+];
+---
+
+<Layout>
+  <!-- ===================== HERO（スライドショー） ===================== -->
+  <section class="relative min-h-[100svh] flex flex-col overflow-hidden">
+    <script is:inline>
+      // 連写モンタージュ再生中は前面テキストを隠す（動きを抑える設定では隠さない）
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('montage-running');
+      }
+    </script>
+    <RapidMontage images={montageImgs} interval={200} firstHold={1000} />
+
+    <!-- スクリム：上下を暗く、中央は写真を見せる -->
+    <div class="absolute inset-0 z-10 bg-gradient-to-r from-ink/75 via-transparent to-transparent"></div>
+    <div class="absolute inset-0 z-10 bg-gradient-to-t from-ink via-ink/5 to-ink/55"></div>
+
+    <!-- 上段：ラベル＋見出し（上に寄せる） -->
+    <div class="container-x relative z-20 pt-28 md:pt-32 hero-reveal hr-1">
+      <p class="eyebrow text-green flex items-center gap-3 reveal is-visible">
+        <span class="inline-block w-10 h-px bg-green"></span>
+        SINCE {SITE.founded} ／ {SITE.league}
+      </p>
+
+      <h1 class="font-display text-[15vw] sm:text-[12.5vw] lg:text-[8rem] xl:text-[9rem] leading-[0.82] mt-5">
+        TRUST<br />
+        <span class="text-gradient-green">THE&nbsp;PROCESS</span>
+      </h1>
+    </div>
+
+    <!-- 中央の余白（写真が見える） -->
+    <div class="flex-1 min-h-[6svh]"></div>
+
+    <!-- 下段：タグライン＋説明＋ボタン（下に寄せる） -->
+    <div class="container-x relative z-20 hero-reveal hr-2">
+      <p class="font-jp text-xl sm:text-2xl md:text-3xl font-bold tracking-wide">
+        相模原を、バスケットの聖地へ。
+      </p>
+      <p class="font-jp text-lg md:text-xl text-bone/80 mt-5 max-w-4xl leading-relaxed">
+        {SITE.hometown}を拠点に、世界を相手に戦う3x3プロバスケットボールクラブ。<br />
+        一試合ごと、一日ごとの「過程」を積み重ね、街とともに高みを目指す。
+      </p>
+
+      <div class="flex flex-wrap gap-3 mt-9">
+        <a href="/players/" class="btn btn-primary">選手を見る</a>
+        <a href="/sponsor/" class="btn btn-ghost">スポンサー募集</a>
+      </div>
+    </div>
+
+    <!-- 下部バー：SNS -->
+    <div class="container-x relative z-20 pt-8 pb-7 hero-reveal hr-3">
+      <div class="flex items-center justify-between border-t border-line pt-5">
+        <a href={ig.href} target="_blank" rel="noopener noreferrer" class="group flex items-center gap-3 text-sm">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="absolute inline-flex h-full w-full rounded-full bg-green opacity-75 animate-ping"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green"></span>
+          </span>
+          <span class="font-jp text-bone/90 group-hover:text-green transition-colors">日々の情報更新中！</span>
+          <span class="flex items-center gap-3 ml-1 text-bone/60">
+            {SOCIALS.map((s) => (
+              <span class="hover:text-green transition-colors"><SocialIcon name={s.key as any} class="w-4 h-4" /></span>
+            ))}
+          </span>
+        </a>
+        <span class="hidden md:inline-block w-px h-8 bg-gradient-to-b from-green to-transparent animate-pulse" aria-hidden="true"></span>
+      </div>
+    </div>
+  </section>
+
+  {/* ヒーロー下のマーキー（流れる帯）は一旦非表示 */}
+  {/* <Marquee /> */}
+
+  <!-- ===================== ABOUT / 理念 ===================== -->
+  <section class="py-24 md:py-32 relative overflow-hidden">
+    <div class="container-x">
+      <div class="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
+        <div class="order-2 lg:order-1 reveal overflow-hidden rounded-2xl aspect-[4/3]">
+          <img
+            src="/images/gallery/g2.jpg"
+            alt="世界大会に挑むチーム（スイス・ローザンヌ）"
+            class="w-full h-full object-cover"
+            loading="lazy"
+          />
+        </div>
+        <div class="order-1 lg:order-2">
+          <SectionHeading eyebrow="WHO WE ARE" size="text-3xl sm:text-4xl md:text-5xl">
+            過程を信じ抜く。
+          </SectionHeading>
+          <p class="font-jp text-bone/80 leading-loose mt-7 reveal">
+            2020年、元Bリーガー・草野佑太のもとに集った相模原プロセス。
+            勝敗の数字だけでなく、そこに至る「過程＝PROCESS」にこそ価値がある——
+            その信念で、私たちは街と選手の成長を後押しし続けます。
+          </p>
+          <p class="font-jp text-muted leading-loose mt-4 reveal reveal-delay-1">
+            セルビア出身の実力者から地元育ちの若手まで、多様な個性が一つのコートに。
+            ストリートで生まれた3x3の熱量を、相模原から世界へ届けます。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PLAYERS プレビュー ===================== -->
+  <section class="py-20 md:py-28 bg-surface/40 border-y border-line">
+    <div class="container-x">
+      <div class="flex flex-wrap items-end justify-between gap-6 mb-12">
+        <SectionHeading eyebrow="OUR PLAYERS">ROSTER</SectionHeading>
+        <a href="/players/" class="btn btn-ghost reveal">選手一覧へ</a>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        {previewPlayers.map((p, i) => (
+          <a href="/players/" class={`reveal reveal-delay-${(i % 4) + 1} block`}>
+            <PlayerCard player={p} />
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SECTIONS ナビ（Sponsor / Academy） ===================== -->
+  <section class="py-24 md:py-32">
+    <div class="container-x grid md:grid-cols-2 gap-6">
+      <a href="/sponsor/" class="reveal group relative overflow-hidden rounded-3xl border border-line min-h-[300px] flex flex-col justify-end p-9 md:p-12 hover:border-green/60 transition-colors">
+        <img src="/images/hero/banner-sponsor.jpg" alt="" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700" loading="lazy" />
+        <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/30"></div>
+        <div class="relative z-10">
+          <p class="eyebrow text-green">PARTNER WITH US</p>
+          <h3 class="font-display text-4xl md:text-5xl mt-2">SPONSOR</h3>
+          <p class="font-jp text-bone/80 mt-3 max-w-sm">相模原から世界へ挑むクラブを、共に。スポンサー・パートナーを募集しています。</p>
+          <span class="inline-flex items-center gap-2 mt-6 font-sans text-sm font-bold text-green">詳しく見る</span>
+        </div>
+      </a>
+      <a href="/academy/" class="reveal reveal-delay-1 group relative overflow-hidden rounded-3xl border border-line min-h-[300px] flex flex-col justify-end p-9 md:p-12 hover:border-green/60 transition-colors">
+        <img src="/images/hero/banner-academy.jpg" alt="" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700" loading="lazy" />
+        <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/30"></div>
+        <div class="relative z-10">
+          <p class="eyebrow text-green">NEXT GENERATION</p>
+          <h3 class="font-display text-4xl md:text-5xl mt-2">ACADEMY</h3>
+          <p class="font-jp text-bone/80 mt-3 max-w-sm">SAGAMIHARA BASKETBALL LAB。世界基準の指導で次世代を育てる学びの場。</p>
+          <span class="inline-flex items-center gap-2 mt-6 font-sans text-sm font-bold text-green">詳しく見る</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===================== SNS フィード ===================== -->
+  <section class="pb-24 md:pb-32">
+    <div class="container-x">
+      <div class="rounded-3xl border border-line bg-surface/40 p-8 md:p-12 grain relative overflow-hidden">
+        <div class="relative z-10 flex flex-wrap items-end justify-between gap-6 mb-10">
+          <div class="reveal">
+            <p class="eyebrow text-green flex items-center gap-2"><span class="inline-block w-6 h-px bg-green"></span>@sagamihara3x3</p>
+            <h2 class="font-display text-4xl md:text-5xl mt-3">日々の<span class="text-gradient-green">情報更新中</span>！</h2>
+          </div>
+          <a href={ig.href} target="_blank" rel="noopener noreferrer" class="btn btn-primary reveal">
+            <SocialIcon name="instagram" class="w-5 h-5" />Instagramで見る
+          </a>
+        </div>
+        <div class="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-3">
+          {feedImgs.map((src, i) => (
+            <a href={ig.href} target="_blank" rel="noopener noreferrer" class={`reveal reveal-delay-${(i % 4) + 1} group relative overflow-hidden rounded-xl aspect-square`}>
+              <img src={src} alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
+              <span class="absolute inset-0 grid place-items-center bg-ink/0 group-hover:bg-ink/40 transition-colors">
+                <span class="opacity-0 group-hover:opacity-100 transition-opacity text-green"><SocialIcon name="instagram" class="w-7 h-7" /></span>
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ページ下部のマーキー（流れる帯）は一旦非表示 */}
+  {/* <Marquee reverse light /> */}
+</Layout>

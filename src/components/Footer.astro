@@ -1,0 +1,143 @@
+---
+import Logo from './Logo.astro';
+import SocialIcon from './SocialIcon.astro';
+import { NAV, SOCIALS, SITE } from '../data/site';
+
+const year = new Date().getFullYear();
+const ig = SOCIALS.find((s) => s.primary)!;
+const subs = SOCIALS.filter((s) => !s.primary);
+---
+
+<footer class="relative bg-ink border-t border-line overflow-hidden grain">
+  <!-- SNS フォローエリア -->
+  <section class="relative z-10 border-b border-line">
+    <div class="container-x py-16 md:py-20">
+      <div class="grid lg:grid-cols-[1.1fr_1fr] gap-12 items-center">
+        <div class="reveal">
+          <p class="eyebrow text-green flex items-center gap-2">
+            <span class="inline-block w-6 h-px bg-green"></span>FOLLOW US
+          </p>
+          <h2 class="font-display text-4xl md:text-6xl mt-4 leading-[0.95]">
+            日々の<span class="text-gradient-green">情報更新中</span>！
+          </h2>
+          <p class="font-jp text-muted mt-5 max-w-md leading-relaxed">
+            試合速報・練習風景・選手の素顔は各SNSで毎日発信中。<br class="hidden md:block" />
+            まずはInstagramのフォローから。
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-4">
+          <!-- Instagram（メイン） -->
+          <a
+            href={ig.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="reveal group flex items-center justify-between gap-4 rounded-2xl border border-line bg-surface/60 p-5 hover-rise hover:border-green/60 transition-colors"
+          >
+            <div class="flex items-center gap-4">
+              <span
+                class="grid place-items-center w-12 h-12 rounded-xl text-bone"
+                style="background:linear-gradient(45deg,#f09433,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888);"
+              >
+                <SocialIcon name="instagram" class="w-6 h-6" />
+              </span>
+              <span>
+                <span class="block font-sans font-bold tracking-wide">Instagram</span>
+                <span class="block text-sm text-muted">{ig.handle}</span>
+              </span>
+            </div>
+            <span class="font-sans text-xs font-bold tracking-widest text-green opacity-0 group-hover:opacity-100 transition-opacity">
+              FOLLOW →
+            </span>
+          </a>
+
+          <!-- X / Facebook -->
+          <div class="grid grid-cols-2 gap-4">
+            {
+              subs.map((s) => (
+                <a
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="reveal reveal-delay-1 group flex items-center gap-3 rounded-2xl border border-line bg-surface/60 p-4 hover-rise hover:border-green/60 transition-colors"
+                >
+                  <span class="grid place-items-center w-10 h-10 rounded-lg bg-ink text-bone group-hover:text-green transition-colors">
+                    <SocialIcon name={s.key as any} class="w-5 h-5" />
+                  </span>
+                  <span class="min-w-0">
+                    <span class="block font-sans text-sm font-bold truncate">{s.label}</span>
+                    <span class="block text-xs text-muted truncate">{s.handle}</span>
+                  </span>
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- メイン -->
+  <div class="container-x py-14 relative z-10">
+    <div class="grid md:grid-cols-[1.4fr_1fr_1fr] gap-10">
+      <div>
+        <Logo />
+        <p class="font-jp text-muted text-sm mt-5 leading-relaxed max-w-xs">
+          「{SITE.philosophy}」を理念に活動する3x3プロバスケットボールクラブ。<br />
+          {SITE.hometown}を拠点に世界へ。
+        </p>
+      </div>
+
+      <nav aria-label="フッターナビゲーション">
+        <p class="eyebrow text-muted mb-4">MENU</p>
+        <ul class="space-y-2.5">
+          {
+            NAV.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="font-jp text-sm text-bone/80 hover:text-green transition-colors"
+                >
+                  {item.labelJp}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div>
+        <p class="eyebrow text-muted mb-4">CONTACT</p>
+        <a
+          href={`mailto:${SITE.email}`}
+          class="font-sans text-sm text-bone/80 hover:text-green transition-colors break-all"
+        >
+          {SITE.email}
+        </a>
+        <p class="font-jp text-sm text-muted mt-4 leading-relaxed">
+          {SITE.league}<br />
+          {SITE.hometown}
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-12 pt-6 border-t border-line flex flex-col md:flex-row items-center justify-between gap-3">
+      <p class="font-sans text-xs text-muted tracking-wide">
+        © {year} {SITE.nameEn}. All rights reserved.
+      </p>
+      <p class="font-display text-sm tracking-[0.2em] text-bone/30">{SITE.tagline}</p>
+    </div>
+
+    <p class="mt-5 text-center font-sans text-[0.65rem] tracking-wide text-bone/25">
+      created by{' '}
+      <a
+        href="https://smalltech.jp/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-bone/40 hover:text-green transition-colors"
+      >
+        Smalltech
+      </a>
+    </p>
+  </div>
+</footer>

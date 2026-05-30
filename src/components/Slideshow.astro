@@ -1,0 +1,118 @@
+---
+// 背景クロスフェード・スライドショー（Ken Burns ズーム付き）。
+// 親要素を relative にして、その背面に absolute で敷く想定。
+interface Slide {
+  src: string;
+  alt?: string;
+  position?: string; // object-position（例: 'center 25%'）。未指定は中央。
+}
+interface Props {
+  slides: Slide[];
+  interval?: number; // ms
+  class?: string;
+}
+const { slides, interval = 5000, class: className = '' } = Astro.props;
+---
+
+<div class={`slideshow absolute inset-0 overflow-hidden ${className}`} data-slideshow data-interval={interval}>
+  {
+    slides.map((s, i) => (
+      <div class="slide absolute inset-0" data-active={i === 0 ? 'true' : 'false'}>
+        <img
+          src={s.src}
+          alt={s.alt ?? ''}
+          class="w-full h-full object-cover"
+          style={`object-position:${s.position ?? 'center'}`}
+          loading={i === 0 ? 'eager' : 'lazy'}
+        />
+      </div>
+    ))
+  }
+</div>
+
+<!-- インジケータ -->
+<div class="absolute bottom-6 right-6 z-20 flex gap-2" data-slideshow-dots>
+  {
+    slides.map((_, i) => (
+      <button
+        type="button"
+        class="slide-dot h-1.5 rounded-full transition-all duration-500"
+        data-index={i}
+        data-active={i === 0 ? 'true' : 'false'}
+        aria-label={`スライド ${i + 1}`}
+      />
+    ))
+  }
+</div>
+
+<style>
+  .slide {
+    opacity: 0;
+    transition: opacity 1.4s ease;
+  }
+  .slide[data-active='true'] {
+    opacity: 1;
+    z-index: 1;
+  }
+  /* Ken Burns: アクティブな間だけゆっくりズーム */
+  .slide img {
+    transform: scale(1.04);
+    transition: transform 7s ease-out;
+  }
+  .slide[data-active='true'] img {
+    transform: scale(1.12);
+  }
+  .slide-dot {
+    width: 10px;
+    background: rgba(255, 255, 255, 0.4);
+  }
+  .slide-dot[data-active='true'] {
+    width: 28px;
+    background: var(--color-green);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .slide,
+    .slide img {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll('[data-slideshow]').forEach((root) => {
+    const slides = Array.from(root.querySelectorAll<HTMLElement>('.slide'));
+    const interval = Number(root.getAttribute('data-interval') ?? 5000);
+    // dots はスライドショー直後の兄弟要素から取得
+    const dotsWrap = root.parentElement?.querySelector('[data-slideshow-dots]');
+    const dots = dotsWrap ? Array.from(dotsWrap.querySelectorAll<HTMLElement>('.slide-dot')) : [];
+    if (slides.length <= 1) return;
+
+    let current = 0;
+    let timer: number | undefined;
+
+    const show = (next: number) => {
+      slides[current].setAttribute('data-active', 'false');
+      dots[current]?.setAttribute('data-active', 'false');
+      current = (next + slides.length) % slides.length;
+      slides[current].setAttribute('data-active', 'true');
+      dots[current]?.setAttribute('data-active', 'true');
+    };
+
+    const start = () => {
+      stop();
+      timer = window.setInterval(() => show(current + 1), interval);
+    };
+    const stop = () => {
+      if (timer) window.clearInterval(timer);
+    };
+
+    dots.forEach((dot, i) =>
+      dot.addEventListener('click', () => {
+        show(i);
+        start();
+      })
+    );
+
+    start();
+  });
+</script>

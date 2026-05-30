@@ -1,0 +1,202 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Marquee from '../components/Marquee.astro';
+
+// 公式アカデミーページ（/academy）の文言に準拠
+const goals = [
+  {
+    no: '01',
+    t: '主体性ある選手',
+    d: '自分自身で現状を把握し、結果までの過程を考えられる“思考力”、思考を実際に試みる“行動力”、その経験を糧に今後へ活かす“成長力”を育みます。',
+  },
+  {
+    no: '02',
+    t: '型破りな選手',
+    d: '自由な発想を持ち、それを体現できるスキルセットを。型を破るには型を知ること。徹底した基礎スキルと現代バスケに必要なスキルに加え、選手の個性を磨きます。',
+  },
+  {
+    no: '03',
+    t: '当たり前の基準値が高い選手',
+    d: '練習に取り組む姿勢、プレー強度。オフコートでの挨拶・返事・コミュニケーションや感謝の気持ち。周囲から応援される選手を育成します。',
+  },
+];
+
+const courses = [
+  {
+    name: '3×3 Jr.Youth',
+    place: '相模原南区',
+    level: '本格志向',
+    desc: '3×3の専門理解と個人技術の向上、各種大会での勝利を目指す。世界で活躍するトップチームとも連携。',
+    schedule: '毎週 火・金 20:20〜21:40',
+    fee: '月会費 ¥22,000（入会金 ¥4,000／年会費 ¥4,000）',
+    accent: true,
+  },
+  {
+    name: '相模大野校 ／ ビギナークラス',
+    place: '相模大野駅近郊',
+    level: '初級者',
+    desc: 'バスケットボールを基礎から学びたい方向け。',
+    schedule: '日曜 18:00〜19:10（不定期・SNS告知）',
+    fee: '参加料 ¥1,500（都度）',
+    accent: false,
+  },
+  {
+    name: '相模大野校 ／ ベーシッククラス',
+    place: '相模大野駅近郊',
+    level: '中級者',
+    desc: 'バスケットスキルやフィジカルを全般的に鍛える。',
+    schedule: '日曜 19:20〜20:50（不定期・SNS告知）',
+    fee: '参加料 ¥2,000（都度）',
+    accent: false,
+  },
+  {
+    name: '綾瀬校 ／ Enjoy class（初心者向け）',
+    place: '神奈川県綾瀬市',
+    level: '初心者',
+    desc: 'バスケットボールの基礎を学び、楽しさをお伝えします。',
+    schedule: '火曜 17:15〜18:15（月3回）',
+    fee: '1クール ¥13,500（入会金なし）',
+    accent: false,
+  },
+  {
+    name: '綾瀬校 ／ Enjoy class（中級者向け）',
+    place: '神奈川県綾瀬市',
+    level: '中級者',
+    desc: '試合形式で学んだスキルを発揮し、仲間との成功体験を楽しむ。',
+    schedule: '火曜 18:20〜19:20（月3回）',
+    fee: '1クール ¥13,500（入会金なし）',
+    accent: false,
+  },
+];
+---
+
+<Layout
+  title="アカデミー"
+  description="SAGAMIHARA BASKETBALL LAB。世界で活躍する選手陣による、次世代育成のためのバスケットボールアカデミー。"
+>
+  <PageHero
+    eyebrow="アカデミー"
+    titleEn="ACADEMY"
+    image="/images/hero/banner-academy.jpg"
+    imageOpacity="opacity-60"
+    lead="SAGAMIHARA BASKETBALL LAB ——“TRUST THE PROCESS” を掲げ、成長のきっかけと、<br />その過程を信頼して楽しめる学びの場を。"
+  />
+
+  <div class="theme-light">
+  <!-- コンセプト -->
+  <section class="pt-16 md:pt-24 pb-16 md:pb-24">
+    <div class="container-x grid lg:grid-cols-2 gap-14 items-center">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="reveal mt-8 overflow-hidden rounded-2xl aspect-[3/4]">
+          <img src="/images/academy/acad1.jpg" alt="SAGAMIHARA PROCESS のコーチ" class="w-full h-full object-cover" loading="lazy" />
+        </div>
+        <div class="reveal reveal-delay-2 overflow-hidden rounded-2xl aspect-[3/4]">
+          <img src="/images/academy/acad2.jpg" alt="トレーニングの様子" class="w-full h-full object-cover" loading="lazy" />
+        </div>
+      </div>
+      <div>
+        <SectionHeading eyebrow="CONCEPT">
+          TRUST THE PROCESS.
+        </SectionHeading>
+        <p class="font-jp text-bone/80 leading-loose mt-7 reveal">
+          「TRUST THE PROCESS」をスローガンに、これからそれぞれの未来に向かう選手に成長のきっかけを与え、
+          その成長過程を信頼して楽しんでいける様な学びの場を提供していきます。
+        </p>
+
+        <div class="mt-8 space-y-6">
+          <div class="reveal reveal-delay-1">
+            <h3 class="font-jp text-lg font-bold flex items-center gap-2">
+              <span class="inline-block w-5 h-px bg-green"></span>ユニークな経験を持つコーチ体制
+            </h3>
+            <p class="font-jp text-sm text-muted leading-relaxed mt-2">
+              3×3日本代表、ヨーロッパリーグ経験者、明成高校で日本一を経験、スラムダンク奨学金生など、
+              世界の舞台で活躍する選手陣が選手の育成方針を監修します。
+            </p>
+          </div>
+          <div class="reveal reveal-delay-2">
+            <h3 class="font-jp text-lg font-bold flex items-center gap-2">
+              <span class="inline-block w-5 h-px bg-green"></span>変わるコーチ、深まる学び
+            </h3>
+            <p class="font-jp text-sm text-muted leading-relaxed mt-2">
+              メインコーチを敢えて置かず、SAGAMIHARA PROCESS のトップ選手が指導を担当。国内では数少ない海外転戦の経験を活かし、
+              世界の3×3やバスケットボール事情を交えた唯一無二の指導を行います。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 育成目標 -->
+  <section class="py-16 md:py-20 bg-surface/40 border-y border-line">
+    <div class="container-x">
+      <SectionHeading eyebrow="OUR GOAL" align="center">
+        育てたい、3つの選手像。
+      </SectionHeading>
+      <div class="grid md:grid-cols-3 gap-6 mt-14">
+        {
+          goals.map((g, i) => (
+            <div class={`reveal reveal-delay-${i + 1} rounded-2xl border border-line bg-ink/40 p-8`}>
+              <p class="font-display text-5xl text-green/30">{g.no}</p>
+              <h3 class="font-jp text-xl font-bold mt-3">{g.t}</h3>
+              <p class="font-jp text-sm text-muted leading-relaxed mt-3">{g.d}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- コース一覧 -->
+  <section class="py-20 md:py-28">
+    <div class="container-x">
+      <SectionHeading eyebrow="CLASSES">
+        コース・スクール
+      </SectionHeading>
+
+      <div class="mt-12 space-y-4">
+        {
+          courses.map((c, i) => (
+            <div
+              class={`reveal reveal-delay-${(i % 3) + 1} group grid md:grid-cols-[1.7fr_1fr_1.2fr_1fr] gap-4 md:gap-6 md:items-start rounded-2xl border border-line p-6 md:px-8 transition-colors ${
+                c.accent ? 'bg-green/10 border-green/40' : 'bg-surface/30 hover:border-green/40'
+              }`}
+            >
+              <div>
+                <span class={`font-sans text-[0.65rem] font-bold tracking-widest px-2 py-0.5 rounded ${c.accent ? 'bg-green text-ink' : 'bg-surface text-green'}`}>
+                  {c.level}
+                </span>
+                <h3 class="font-jp text-lg font-bold mt-2 group-hover:text-green transition-colors">{c.name}</h3>
+                <p class="font-jp text-xs text-muted leading-relaxed mt-2">{c.desc}</p>
+              </div>
+              <p class="font-jp text-sm text-muted">
+                <span class="text-green/70">場所</span><br />{c.place}
+              </p>
+              <p class="font-jp text-sm text-muted">
+                <span class="text-green/70">日時</span><br />{c.schedule}
+              </p>
+              <p class="font-sans text-sm text-bone/90">
+                <span class="font-jp text-green/70 text-xs block">料金</span>{c.fee}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+
+      <p class="font-jp text-xs text-muted mt-8 reveal leading-relaxed">
+        ※ 料金は税込。別途スポーツ保険料（中学生以下 ¥1,000／高校生以上 ¥2,000）が必要です。<br />
+        ※ 日程・募集状況は変更となる場合があります。最新情報はお問い合わせ・各SNSをご確認ください。
+      </p>
+
+      <div class="mt-12 reveal">
+        <a href="/contact/" class="btn btn-primary">体験・入会のお問い合わせ <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  {/* ページ下部のマーキー（流れる帯）は一旦非表示 */}
+  {/* <Marquee /> */}
+</Layout>

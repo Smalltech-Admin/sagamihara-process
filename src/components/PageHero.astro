@@ -1,0 +1,42 @@
+---
+// サブページ共通ヒーロー
+interface Props {
+  eyebrow: string;
+  titleEn: string;
+  titleJp?: string; // 英語タイトル下の日本語サブタイトル（任意）
+  lead?: string;
+  image?: string; // 背景に敷く実写真（任意）
+  imageOpacity?: string; // 背景画像の不透明度クラス（既定 opacity-25）
+}
+const { eyebrow, titleEn, titleJp, lead, image, imageOpacity = 'opacity-55' } = Astro.props;
+---
+
+<section class="relative pt-[150px] md:pt-[200px] pb-16 md:pb-24 overflow-hidden grain">
+  {
+    image && (
+      <>
+        <img src={image} alt="" class={`pointer-events-none absolute inset-0 w-full h-full object-cover ${imageOpacity}`} loading="eager" />
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink via-ink/55 to-ink/15"></div>
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-transparent"></div>
+      </>
+    )
+  }
+  <!-- 背景の巨大アウトライン文字 -->
+  <span
+    class="pointer-events-none absolute -top-2 right-0 md:-right-4 font-display text-[28vw] md:text-[20vw] leading-none text-outline whitespace-nowrap select-none"
+    aria-hidden="true"
+  >
+    {titleEn}
+  </span>
+  <!-- グリーンのグロー -->
+  <div class="pointer-events-none absolute -left-40 top-10 w-[460px] h-[460px] rounded-full bg-green/15 blur-[120px]"></div>
+
+  <div class="container-x relative z-10">
+    <p class="eyebrow text-green flex items-center gap-2">
+      <span class="inline-block w-8 h-px bg-green"></span>{eyebrow}
+    </p>
+    <h1 class="font-display text-6xl md:text-8xl mt-5 leading-[0.9]">{titleEn}</h1>
+    {titleJp && <p class="font-jp text-lg md:text-xl text-bone/90 mt-3 tracking-wide">{titleJp}</p>}
+    {lead && <p class="font-jp text-muted mt-6 max-w-4xl leading-relaxed" set:html={lead} />}
+  </div>
+</section>
