@@ -70,47 +70,52 @@ const isActive = (href: string) =>
       </button>
     </div>
   </div>
-
-  <!-- Mobile fullscreen menu -->
-  <div
-    class="lg:hidden fixed inset-0 z-40 bg-ink overflow-y-auto flex-col justify-center px-8 py-24 hidden grain"
-    data-menu-panel
-  >
-    <nav class="relative z-10 flex flex-col gap-1" aria-label="モバイルナビゲーション">
-      {
-        NAV.map((item, i) => (
-          <a
-            href={item.href}
-            class={`group flex items-baseline gap-4 py-2.5 border-b border-line ${
-              isActive(item.href) ? 'text-green' : 'text-bone'
-            }`}
-          >
-            <span class="font-sans text-xs text-green/60 w-8 shrink-0">0{i + 1}</span>
-            <span class="font-display text-3xl tracking-wide group-hover:text-green transition-colors">
-              {item.label}
-            </span>
-            <span class="font-jp text-sm text-muted ml-auto self-center shrink-0">{item.labelJp}</span>
-          </a>
-        ))
-      }
-    </nav>
-    <div class="relative z-10 mt-10 flex items-center gap-5">
-      {
-        SOCIALS.map((s) => (
-          <a
-            href={s.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={s.label}
-            class="text-bone hover:text-green transition-colors"
-          >
-            <SocialIcon name={s.key as any} class="w-6 h-6" />
-          </a>
-        ))
-      }
-    </div>
-  </div>
 </header>
+
+<!--
+  Mobile fullscreen menu。
+  ヘッダーが is-scrolled で backdrop-filter を持つと containing block を作り
+  内側の fixed inset-0 がビューポートでなくヘッダーに対して相対になってしまう。
+  これを避けるため、メニューパネルは <header> の外に出している。
+-->
+<div
+  class="lg:hidden fixed inset-0 z-40 bg-ink overflow-y-auto flex-col justify-center px-8 py-24 hidden grain"
+  data-menu-panel
+>
+  <nav class="relative z-10 flex flex-col gap-1" aria-label="モバイルナビゲーション">
+    {
+      NAV.map((item, i) => (
+        <a
+          href={item.href}
+          class={`group flex items-baseline gap-4 py-2.5 border-b border-line ${
+            isActive(item.href) ? 'text-green' : 'text-bone'
+          }`}
+        >
+          <span class="font-sans text-xs text-green/60 w-8 shrink-0">0{i + 1}</span>
+          <span class="font-display text-3xl tracking-wide group-hover:text-green transition-colors">
+            {item.label}
+          </span>
+          <span class="font-jp text-sm text-muted ml-auto self-center shrink-0">{item.labelJp}</span>
+        </a>
+      ))
+    }
+  </nav>
+  <div class="relative z-10 mt-10 flex items-center gap-5">
+    {
+      SOCIALS.map((s) => (
+        <a
+          href={s.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={s.label}
+          class="text-bone hover:text-green transition-colors"
+        >
+          <SocialIcon name={s.key as any} class="w-6 h-6" />
+        </a>
+      ))
+    }
+  </div>
+</div>
 
 <script>
   // ヘッダーのスクロール状態（ヒーロー上は透明 → スクロールで背景表示）
