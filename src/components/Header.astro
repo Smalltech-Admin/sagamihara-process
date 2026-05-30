@@ -73,7 +73,7 @@ const isActive = (href: string) =>
 
   <!-- Mobile fullscreen menu -->
   <div
-    class="lg:hidden fixed inset-0 z-40 bg-ink/98 backdrop-blur-md flex-col justify-center px-8 hidden grain"
+    class="lg:hidden fixed inset-0 z-40 bg-ink overflow-y-auto flex-col justify-center px-8 py-24 hidden grain"
     data-menu-panel
   >
     <nav class="relative z-10 flex flex-col gap-1" aria-label="モバイルナビゲーション">
@@ -81,15 +81,15 @@ const isActive = (href: string) =>
         NAV.map((item, i) => (
           <a
             href={item.href}
-            class={`group flex items-baseline gap-4 py-3 border-b border-line ${
+            class={`group flex items-baseline gap-4 py-2.5 border-b border-line ${
               isActive(item.href) ? 'text-green' : 'text-bone'
             }`}
           >
-            <span class="font-sans text-xs text-green/60 w-8">0{i + 1}</span>
-            <span class="font-display text-4xl tracking-wide group-hover:text-green transition-colors">
+            <span class="font-sans text-xs text-green/60 w-8 shrink-0">0{i + 1}</span>
+            <span class="font-display text-3xl tracking-wide group-hover:text-green transition-colors">
               {item.label}
             </span>
-            <span class="font-jp text-sm text-muted ml-auto self-center">{item.labelJp}</span>
+            <span class="font-jp text-sm text-muted ml-auto self-center shrink-0">{item.labelJp}</span>
           </a>
         ))
       }
