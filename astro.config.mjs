@@ -7,7 +7,7 @@ import tailwindcss from '@tailwindcss/vite';
 // もしプロジェクトページ（xxx.github.io/sagamihara-process）で公開する場合は
 // base を '/sagamihara-process' に変更すること。
 export default defineConfig({
-  site: 'https://sagamihara-process.com',
+  site: 'https://sagamihara-process.smalltech.jp',
   base: '/',
   vite: {
     plugins: [tailwindcss()],
