@@ -241,8 +241,8 @@ body {
 /* ---- ヒーローのイントロ表示（連写モンタージュ停止後にフェードイン） ---- */
 .hero-reveal {
   transition:
-    opacity 1.5s ease,
-    transform 1.5s var(--ease-out-expo);
+    opacity 2.4s ease,
+    transform 2.4s var(--ease-out-expo);
 }
 /* モンタージュ再生中は前面テキストを隠す（JSが付与・終了時に解除） */
 html.montage-running .hero-reveal {
@@ -250,10 +250,10 @@ html.montage-running .hero-reveal {
   transform: translateY(28px);
 }
 .hero-reveal.hr-2 {
-  transition-delay: 0.25s;
+  transition-delay: 0.5s;
 }
 .hero-reveal.hr-3 {
-  transition-delay: 0.5s;
+  transition-delay: 1s;
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-reveal {
