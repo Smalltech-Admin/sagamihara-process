@@ -10,16 +10,19 @@ const goals = [
     no: '01',
     t: '主体性ある選手',
     d: '自分自身で現状を把握し、結果までの過程を考えられる“思考力”、思考を実際に試みる“行動力”、その経験を糧に今後へ活かす“成長力”を育みます。',
+    img: '/images/academy/goal-01.jpg',
   },
   {
     no: '02',
     t: '型破りな選手',
     d: '自由な発想を持ち、それを体現できるスキルセットを。型を破るには型を知ること。徹底した基礎スキルと現代バスケに必要なスキルに加え、選手の個性を磨きます。',
+    img: '/images/academy/goal-02.jpg',
   },
   {
     no: '03',
     t: '当たり前の基準値が高い選手',
     d: '練習に取り組む姿勢、プレー強度。オフコートでの挨拶・返事・コミュニケーションや感謝の気持ち。周囲から応援される選手を育成します。',
+    img: '/images/academy/goal-03.jpg',
   },
 ];
 
@@ -81,7 +84,8 @@ const courses = [
     titleEn="ACADEMY"
     image="/images/hero/banner-academy.jpg"
     imageOpacity="opacity-60"
-    lead="SAGAMIHARA BASKETBALL LAB ——“TRUST THE PROCESS” を掲げ、成長のきっかけと、<br />その過程を信頼して楽しめる学びの場を。"
+    imagePosition="center 20%"
+    lead="SAGAMIHARA BASKETBALL LAB ——“TRUST THE PROCESS” を掲げ、成長のきっかけと、その過程を信頼して楽しめる学びの場を。"
   />
 
   <div class="theme-light">
@@ -138,10 +142,15 @@ const courses = [
       <div class="grid md:grid-cols-3 gap-6 mt-14">
         {
           goals.map((g, i) => (
-            <div class={`reveal reveal-delay-${i + 1} rounded-2xl border border-line bg-ink/40 p-8`}>
-              <p class="font-display text-5xl text-green/30">{g.no}</p>
-              <h3 class="font-jp text-xl font-bold mt-3">{g.t}</h3>
-              <p class="font-jp text-sm text-muted leading-relaxed mt-3">{g.d}</p>
+            <div class={`reveal reveal-delay-${i + 1} rounded-2xl border border-line bg-ink/40 overflow-hidden`}>
+              <div class="aspect-[4/3] overflow-hidden">
+                <img src={g.img} alt="" class="w-full h-full object-cover" loading="lazy" />
+              </div>
+              <div class="p-8">
+                <p class="font-display text-5xl text-green/30 text-center">{g.no}</p>
+                <h3 class="font-jp text-xl font-bold mt-3">{g.t}</h3>
+                <p class="font-jp text-sm text-muted leading-relaxed mt-3">{g.d}</p>
+              </div>
             </div>
           ))
         }

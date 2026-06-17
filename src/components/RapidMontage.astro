@@ -23,7 +23,14 @@ const { images, interval = 200, firstHold = 1000, class: className = '' } = Astr
   {
     images.map((src, i) => (
       <div class={`m-frame absolute inset-0${i === 0 ? ' m-first' : ''}`} data-active={i === 0 ? 'true' : 'false'}>
-        <img src={src} alt="" class="w-full h-full object-cover" loading="eager" decoding="async" />
+        <img
+          src={src}
+          alt=""
+          class="w-full h-full object-cover"
+          style={i === 0 ? 'object-position: center' : 'object-position: center 22%'}
+          loading="eager"
+          decoding="async"
+        />
       </div>
     ))
   }

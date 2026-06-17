@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import RapidMontage from '../components/RapidMontage.astro';
+import SplitMontage from '../components/SplitMontage.astro';
 import Marquee from '../components/Marquee.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import PlayerCard from '../components/PlayerCard.astro';
@@ -11,8 +11,23 @@ import { SITE, SOCIALS } from '../data/site';
 const previewPlayers = PLAYERS.slice(0, 4);
 const ig = SOCIALS.find((s) => s.primary)!;
 
-// 連写モンタージュ用（ロゴ→IG9枚→元画像3枚 hero4/5/3、最後の hero3 で停止）
-const montageImgs = Array.from({ length: 13 }, (_, i) => `/images/montage/m${String(i + 1).padStart(2, '0')}.jpg`);
+// 2分割モンタージュ：左右ともに屋外/屋内バランスよく配置
+const montageLogo = '/images/montage/m01.jpg';
+const montageLeft = [
+  '/images/montage/left-01.jpg', // out
+  '/images/montage/left-02.jpg', // in
+  '/images/montage/left-03.jpg', // out
+  '/images/montage/left-04.jpg', // in
+  '/images/montage/left-05.jpg', // in
+];
+const montageRight = [
+  '/images/montage/right-01.jpg', // in
+  '/images/montage/right-02.jpg', // out
+  '/images/montage/right-03.jpg', // in
+  '/images/montage/right-04.jpg', // out
+  '/images/montage/right-05.jpg', // in
+];
+const montageStill = '/images/montage/still.jpg';
 
 // Instagram(@sagamihara3x3)の実投稿（収集したもの）
 const feedImgs = [
@@ -36,7 +51,14 @@ const feedImgs = [
         document.documentElement.classList.add('montage-running');
       }
     </script>
-    <RapidMontage images={montageImgs} interval={200} firstHold={1000} />
+    <SplitMontage
+      logoImage={montageLogo}
+      leftImages={montageLeft}
+      rightImages={montageRight}
+      stillImage={montageStill}
+      interval={300}
+      firstHold={1800}
+    />
 
     <!-- スクリム：上下を暗く、中央は写真を見せる -->
     <div class="absolute inset-0 z-10 bg-gradient-to-r from-ink/75 via-transparent to-transparent"></div>
@@ -98,8 +120,8 @@ const feedImgs = [
       <div class="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
         <div class="order-2 lg:order-1 reveal overflow-hidden rounded-2xl aspect-[4/3]">
           <img
-            src="/images/gallery/g2.jpg"
-            alt="世界大会に挑むチーム（スイス・ローザンヌ）"
+            src="/images/gallery/about-1.jpg"
+            alt="選手紹介（3x3 JAPAN CHAMPIONSHIPS）"
             class="w-full h-full object-cover"
             loading="lazy"
           />
@@ -154,7 +176,7 @@ const feedImgs = [
         </div>
       </a>
       <a href="/academy/" class="reveal reveal-delay-1 group relative overflow-hidden rounded-3xl border border-line min-h-[300px] flex flex-col justify-end p-9 md:p-12 hover:border-green/60 transition-colors">
-        <img src="/images/hero/banner-academy.jpg" alt="" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700" loading="lazy" />
+        <img src="/images/hero/banner-academy.jpg" alt="" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700" style="object-position: center 20%" loading="lazy" />
         <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/30"></div>
         <div class="relative z-10">
           <p class="eyebrow text-green">NEXT GENERATION</p>
