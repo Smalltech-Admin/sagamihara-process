@@ -10,16 +10,19 @@ const reasons = [
     no: '01',
     t: '地域とともに育つブランド',
     d: '「相模原をバスケットの聖地へ」。地域に根ざしたクラブとの協働で、御社の地域貢献・認知をともに高めます。',
+    img: '/images/sponsors/value-01.jpg',
   },
   {
     no: '02',
     t: '世界へ広がる露出',
     d: '国内外の大会に挑戦する3x3チーム。SNS・試合会場・メディアを通じて、ロゴとブランドを広く届けます。',
+    img: '/images/sponsors/value-02.jpg',
   },
   {
     no: '03',
     t: '次世代育成への投資',
     d: 'アカデミー（SAGAMIHARA BASKETBALL LAB）を通じ、子どもたちの未来づくりに貢献。CSR文脈での発信が可能です。',
+    img: '/images/sponsors/value-03.jpg',
   },
 ];
 
@@ -81,6 +84,7 @@ const sponsors = [
     titleEn="SPONSOR"
     image="/images/hero/banner-sponsor.jpg"
     imageOpacity="opacity-60"
+    imagePosition="center 38%"
     lead="相模原から世界へ挑むクラブを、共に。御社のブランドとともに、新しい挑戦の物語をつくります。"
   />
 
@@ -94,10 +98,15 @@ const sponsors = [
       <div class="grid md:grid-cols-3 gap-6 mt-12">
         {
           reasons.map((r, i) => (
-            <div class={`reveal reveal-delay-${i + 1} rounded-2xl border border-line bg-surface/40 p-8 hover:border-green/50 transition-colors`}>
-              <p class="font-display text-5xl text-green/30">{r.no}</p>
-              <h3 class="font-jp text-xl font-bold mt-4">{r.t}</h3>
-              <p class="font-jp text-sm text-muted leading-relaxed mt-3">{r.d}</p>
+            <div class={`reveal reveal-delay-${i + 1} rounded-2xl border border-line bg-surface/40 overflow-hidden hover:border-green/50 transition-colors`}>
+              <div class="aspect-[4/3] overflow-hidden">
+                <img src={r.img} alt="" class="w-full h-full object-cover" loading="lazy" />
+              </div>
+              <div class="p-8">
+                <p class="font-display text-5xl text-green/30 text-center">{r.no}</p>
+                <h3 class="font-jp text-xl font-bold mt-4">{r.t}</h3>
+                <p class="font-jp text-sm text-muted leading-relaxed mt-3">{r.d}</p>
+              </div>
             </div>
           ))
         }

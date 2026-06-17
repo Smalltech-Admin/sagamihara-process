@@ -1,0 +1,298 @@
+---
+// ヒーロー2分割モンタージュ：
+//  1) ロゴをゆっくりフェードイン＆firstHold ms 表示
+//  2) ロゴをパチパチ点滅させて消し、写真モード突入
+//  3) デスクトップは左右2分割で交互に切替。モバイルは全幅で順に切替
+//  4) 全枚数巡回後、stillImage（停止画）を全幅でフェードイン
+//  5) <html>から montage-running を外し前面テキストを表示
+// prefers-reduced-motion 時は即・stillImage表示。
+interface Props {
+  logoImage: string;
+  leftImages: string[];
+  rightImages: string[];
+  stillImage: string;
+  interval?: number;
+  firstHold?: number;
+  class?: string;
+}
+const {
+  logoImage,
+  leftImages,
+  rightImages,
+  stillImage,
+  interval = 300,
+  firstHold = 1000,
+  class: className = '',
+} = Astro.props;
+// モバイル用：左右を交互に並べた1列順
+const mobileImages: string[] = [];
+const maxLen = Math.max(leftImages.length, rightImages.length);
+for (let i = 0; i < maxLen; i++) {
+  if (leftImages[i]) mobileImages.push(leftImages[i]);
+  if (rightImages[i]) mobileImages.push(rightImages[i]);
+}
+---
+
+<div
+  class={`montage absolute inset-0 overflow-hidden ${className}`}
+  data-split-montage
+  data-interval={interval}
+  data-firsthold={firstHold}
+>
+  <!-- 左パネル（lg以上で表示） -->
+  <div class="sp-left absolute inset-y-0 left-0 w-1/2 z-10 hidden lg:block">
+    {
+      leftImages.map((src, i) => (
+        <div class="sp-frame absolute inset-0" data-active="false">
+          <img
+            src={src}
+            alt=""
+            class="w-full h-full object-cover"
+            style="object-position: center 22%"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- 右パネル（lg以上で表示） -->
+  <div class="sp-right absolute inset-y-0 right-0 w-1/2 z-10 hidden lg:block">
+    {
+      rightImages.map((src, i) => (
+        <div class="sp-frame absolute inset-0" data-active="false">
+          <img
+            src={src}
+            alt=""
+            class="w-full h-full object-cover"
+            style="object-position: center 22%"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- モバイル全幅（lg未満で表示） -->
+  <div class="sp-mobile absolute inset-0 z-10 lg:hidden">
+    {
+      mobileImages.map((src, i) => (
+        <div class="sp-frame absolute inset-0" data-active="false">
+          <img
+            src={src}
+            alt=""
+            class="w-full h-full object-cover"
+            style="object-position: center 22%"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- ロゴ（最初に全幅表示） -->
+  <div class="sp-logo absolute inset-0 z-30" data-active="true">
+    <img src={logoImage} alt="" class="w-full h-full object-cover" loading="eager" decoding="async" />
+  </div>
+
+  <!-- 停止画（最後に全幅で出現）。文字が読みやすいよう暗いオーバーレイを重ねる -->
+  <div class="sp-still absolute inset-0 z-20" data-active="false">
+    <img src={stillImage} alt="" class="w-full h-full object-cover" loading="eager" decoding="async" />
+    <div class="absolute inset-0 bg-black/65 pointer-events-none"></div>
+  </div>
+</div>
+
+<style>
+  .sp-logo,
+  .sp-still {
+    transition: opacity 0.9s ease;
+  }
+  .sp-logo[data-active='false'],
+  .sp-still[data-active='false'] {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .sp-logo.m-fadein {
+    animation: sp-fadein 0.4s ease both;
+  }
+  .sp-logo.m-flicker {
+    animation: sp-flicker 0.5s linear both;
+  }
+  .sp-frame {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .sp-frame[data-active='true'] {
+    opacity: 1;
+    visibility: visible;
+    z-index: 1;
+  }
+  @keyframes sp-fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes sp-flicker {
+    0% {
+      opacity: 1;
+    }
+    14% {
+      opacity: 0.12;
+    }
+    22% {
+      opacity: 1;
+    }
+    36% {
+      opacity: 0.08;
+    }
+    46% {
+      opacity: 1;
+    }
+    60% {
+      opacity: 0.2;
+    }
+    68% {
+      opacity: 1;
+    }
+    84% {
+      opacity: 0.04;
+    }
+    92% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.4;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sp-logo,
+    .sp-still {
+      transition: none;
+    }
+    .sp-logo.m-fadein,
+    .sp-logo.m-flicker {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-split-montage]').forEach((root) => {
+    const logoEl = root.querySelector<HTMLElement>('.sp-logo')!;
+    const stillEl = root.querySelector<HTMLElement>('.sp-still')!;
+    const leftFrames = Array.from(root.querySelectorAll<HTMLElement>('.sp-left .sp-frame'));
+    const rightFrames = Array.from(root.querySelectorAll<HTMLElement>('.sp-right .sp-frame'));
+    const mobileFrames = Array.from(root.querySelectorAll<HTMLElement>('.sp-mobile .sp-frame'));
+    const base = Number(root.getAttribute('data-interval') ?? 300);
+    const firstHold = Number(root.getAttribute('data-firsthold') ?? 1000);
+    const FLICKER = 500;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const reveal = () => document.documentElement.classList.remove('montage-running');
+
+    if (reduce) {
+      logoEl.setAttribute('data-active', 'false');
+      stillEl.setAttribute('data-active', 'true');
+      reveal();
+      return;
+    }
+
+    // ロゴをフェードインで表示
+    logoEl.classList.add('m-fadein');
+
+    // 全画像のプリロード（最大1.5秒）
+    const imgs = Array.from(root.querySelectorAll<HTMLImageElement>('img'));
+    const ready = Promise.all(
+      imgs.map((im) =>
+        im.complete && im.naturalWidth
+          ? Promise.resolve()
+          : new Promise<void>((res) => {
+              im.addEventListener('load', () => res(), { once: true });
+              im.addEventListener('error', () => res(), { once: true });
+            })
+      )
+    );
+    const preload = Promise.race([ready, new Promise<void>((r) => window.setTimeout(r, 1500))]);
+    const hold = new Promise<void>((r) => window.setTimeout(r, firstHold));
+
+    Promise.all([preload, hold]).then(() => {
+      // ロゴをパチパチ直前に裏の初フレームを点灯（フェードイン中の漏れを防ぐ）
+      if (leftFrames[0]) leftFrames[0].setAttribute('data-active', 'true');
+      if (rightFrames[0]) rightFrames[0].setAttribute('data-active', 'true');
+      if (mobileFrames[0]) mobileFrames[0].setAttribute('data-active', 'true');
+      // ロゴをパチパチ
+      logoEl.classList.remove('m-fadein');
+      logoEl.classList.add('m-flicker');
+      window.setTimeout(() => {
+        // ロゴ消す＝下のパネルが見える
+        logoEl.classList.remove('m-flicker');
+        logoEl.setAttribute('data-active', 'false');
+
+        // 写真モード開始
+        const isMobile = !window.matchMedia('(min-width: 1024px)').matches;
+        let leftIdx = 0,
+          rightIdx = 0,
+          mobileIdx = 0;
+        let advLeft = true;
+
+        const finish = () => {
+          stillEl.setAttribute('data-active', 'true');
+          window.setTimeout(reveal, 700);
+        };
+
+        const tick = () => {
+          if (isMobile) {
+            if (mobileIdx >= mobileFrames.length - 1) {
+              window.clearInterval(timer);
+              finish();
+              return;
+            }
+            mobileFrames[mobileIdx].setAttribute('data-active', 'false');
+            mobileIdx++;
+            mobileFrames[mobileIdx].setAttribute('data-active', 'true');
+          } else {
+            const leftDone = leftIdx >= leftFrames.length - 1;
+            const rightDone = rightIdx >= rightFrames.length - 1;
+            if (leftDone && rightDone) {
+              window.clearInterval(timer);
+              finish();
+              return;
+            }
+            // 交互に進める。終わった側はスキップ
+            if (advLeft && !leftDone) {
+              leftFrames[leftIdx].setAttribute('data-active', 'false');
+              leftIdx++;
+              leftFrames[leftIdx].setAttribute('data-active', 'true');
+              advLeft = false;
+            } else if (!rightDone) {
+              rightFrames[rightIdx].setAttribute('data-active', 'false');
+              rightIdx++;
+              rightFrames[rightIdx].setAttribute('data-active', 'true');
+              advLeft = true;
+            } else if (!leftDone) {
+              leftFrames[leftIdx].setAttribute('data-active', 'false');
+              leftIdx++;
+              leftFrames[leftIdx].setAttribute('data-active', 'true');
+            }
+          }
+        };
+
+        const timer = window.setInterval(tick, base);
+        // 保険：必ず最後まで到達
+        window.setTimeout(
+          () => {
+            window.clearInterval(timer);
+            finish();
+          },
+          base * (leftFrames.length + rightFrames.length + 2) + 3000
+        );
+      }, FLICKER);
+    });
+  });
+</script>

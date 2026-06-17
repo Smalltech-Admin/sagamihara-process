@@ -6,16 +6,31 @@ interface Props {
   titleJp?: string; // 英語タイトル下の日本語サブタイトル（任意）
   lead?: string;
   image?: string; // 背景に敷く実写真（任意）
-  imageOpacity?: string; // 背景画像の不透明度クラス（既定 opacity-25）
+  imageOpacity?: string; // 背景画像の不透明度クラス（既定 opacity-55）
+  imagePosition?: string; // 背景画像の表示位置（縦撮りは center 22% など上寄せが推奨）
 }
-const { eyebrow, titleEn, titleJp, lead, image, imageOpacity = 'opacity-55' } = Astro.props;
+const {
+  eyebrow,
+  titleEn,
+  titleJp,
+  lead,
+  image,
+  imageOpacity = 'opacity-55',
+  imagePosition = 'center',
+} = Astro.props;
 ---
 
 <section class="relative pt-[150px] md:pt-[200px] pb-16 md:pb-24 overflow-hidden grain">
   {
     image && (
       <>
-        <img src={image} alt="" class={`pointer-events-none absolute inset-0 w-full h-full object-cover ${imageOpacity}`} loading="eager" />
+        <img
+          src={image}
+          alt=""
+          class={`pointer-events-none absolute inset-0 w-full h-full object-cover ${imageOpacity}`}
+          style={`object-position: ${imagePosition}`}
+          loading="eager"
+        />
         <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink via-ink/55 to-ink/15"></div>
         <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-transparent"></div>
       </>
